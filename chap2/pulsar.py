@@ -48,3 +48,11 @@ def relu(x) :
 def sigmoid(x) :
     return np.exp(-relu(-x)) / (1.0 + np.exp(-np.abs(x)))
 
+def sigmoid_derv(x, y) :
+    return y * (1 - y)
+
+def sigmoid_cross_entropy_with_logits(z, x) :
+    return relu(x) - x * z + np.log(1 + np.exp(-np.abs(x)))
+
+def sigmoid_cross_entropy_with_logits_derv(z, x) :
+    return -z + sigmoid(x)
