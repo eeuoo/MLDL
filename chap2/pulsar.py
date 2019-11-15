@@ -34,3 +34,11 @@ def backprop_postproc(G_loss, aux) :
     G_output = g_entropy_output * G_entropy
 
     return G_output
+
+def eval_accuracy(output, y) :
+    estimate = np.greater(output, 0)
+    answer = np.greater(y, 0.5)
+    correct = np.equal(estimate, answer)
+
+    return np.mean(correct)
+
