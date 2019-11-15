@@ -42,3 +42,9 @@ def eval_accuracy(output, y) :
 
     return np.mean(correct)
 
+def relu(x) :
+    return np.maximum(x, 0)
+
+def sigmoid(x) :
+    return np.exp(-relu(-x)) / (1.0 + np.exp(-np.abs(x)))
+
