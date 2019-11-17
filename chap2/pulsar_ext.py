@@ -53,3 +53,10 @@ def eval_accuracy(output, y) :
 
     return [accuracy, precision, recall, f1]
 
+def save_div(p, q) :
+    p, q = float(p), float(q)
+    
+    if np.abs(q) < 1.0e-20 :
+        return np.sign(p)
+    
+    return p / q
