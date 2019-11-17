@@ -34,3 +34,22 @@ def load_pulsar_dataset(adjust_ratio) :
         data = np.zeros([star_cnt + pulsar_cnt, 9])
         data[0 : star_cnt,  : ] = np.asarray(stars, dtype = 'float32')
         data[star_cnt,  : ] = np.asarray(pulsars, dtype = 'float32')
+
+def eval_accuracy(output, y) :
+    est_yes = np.greater(output, 0)
+    ans_yes = np.greater(y, 0.5)
+    est_no = np.logical_not(est_yes)
+    ans_no = np.logical_not(ans_yes)
+
+    tp = np.sum(np.logical_and(est_yes, ans_yes))
+    fp = np.sum(np.logical_and(est_yes, ans_no))
+    fn = np.sum(np.logical_and(est_no, ans_yes))
+    tn = np.sum(np.logical_and(est_no, ans_no))
+
+    accuracy = safe_div(tp + tn, tp + tn + fp + fn)
+    precision = safe_div(tp, tp + fp)
+    recall = safe_div(tp, tp + fn)
+    f1 = 2 * safe_div(recall * precision, recall + precision)
+
+    return [accuracy, precision, recall, f1]
+
