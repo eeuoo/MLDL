@@ -60,3 +60,25 @@ def save_div(p, q) :
         return np.sign(p)
     
     return p / q
+
+def train_and_test(epoch_count, mb_size, report) :
+    step_count = arrange_data(mb_size)
+    test_x, test_y = get_test_data()
+
+    for epoch in range(epoch_count) :
+        losses = []
+
+        for n in range(step_count) :
+            train_x, train_y = get_train_data(mb_size, n)
+            loss, _ = run_train(train_x, train_y)
+            losses.append(loss)
+
+        if report > 0 and (epoch + 1) % report == 0 :
+            acc = run_test(test_x, test_y)
+            acc_str = ','.join(['%5.3f']*4) % tuple(acc)
+            print('Epoch {} : loss = {:5.3f}, result = {}'.format(epoch + 1, np.mean(losses), acc_str))
+
+    acc = run_test(test_x, test_y)
+    acc_str = ','.join(['%5.3f']*4) % tuple(acc)
+    print('\nFinal Test : final result = {}'.format(acc_str))
+        
