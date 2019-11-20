@@ -17,3 +17,8 @@ def load_steel_dataset() :
     data = np.asarray(rows, dtype = 'float32')
     input_cnt, output_cnt = 27, 7
 
+def forward_postproc(output, y) :
+    entropy = softmax_cross_with_logits(y, output)
+    loss = np.mean(entropy)
+    return loss, [y, output, entropy]
+
