@@ -48,3 +48,14 @@ def softmax(x) :
     probs = (exp.transpose() / sum_exp).transpose()
 
     return probs
+
+def softmax_derv(x, y) :
+    mb_size, nom_size = x.shape
+    derv = np.ndarray([mb_size, nom_size, nom_size])
+    for n in range(mb_size) :
+        for i in range(nom_size) :
+            for j in range(nom_size) :
+                derv[n, i, j] = -y[n, i] * y[n,j]
+            derv[n, i, i] += y[n, i]
+    
+    return derv
