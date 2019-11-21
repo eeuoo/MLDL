@@ -40,3 +40,11 @@ def eval_accuracy(output, y) :
 
     return np.mean(correct)
 
+def softmax(x) :
+    max_elem = np.max(x, axis=1)
+    diff = (x.transpose() - max_elem).transpose()
+    exp = np.exp(diff)
+    sum_exp = np.sum(exp, axis=1)
+    probs = (exp.transpose() / sum_exp).transpose()
+
+    return probs
