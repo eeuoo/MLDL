@@ -19,3 +19,6 @@ def forward_neuralnet_hidden1(x) :
     output = np.matmul(hidden, pm_output['w']) + pm_output['b']
 
     return output, [x, hidden] 
+
+def relu(x) :
+    return np.maximum(x, 0)
