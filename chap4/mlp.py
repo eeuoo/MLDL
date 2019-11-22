@@ -11,4 +11,11 @@ def alloc_param_pair(shape) :
     bias = np.zeros(shape[-1])
 
     return {'w' : weight, 'b' : bias}
-    
+
+def forward_neuralnet_hidden1(x) :
+    global pm_output, pm_hidden
+
+    hidden = relu(np.matmul(x, pm_hidden['w']) + pm_hidden['b'])
+    output = np.matmul(hidden, pm_output['w']) + pm_output['b']
+
+    return output, [x, hidden] 
