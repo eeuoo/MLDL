@@ -59,3 +59,4 @@ def softmax_derv(x, y) :
             derv[n, i, i] += y[n, i]
     
     return derv
+
