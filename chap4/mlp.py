@@ -49,3 +49,15 @@ def backprop_neuralnet_hidden1(G_output, aux) :
 
 def relu_derv(y) :
     return np.sign(y)
+
+def init_model_hiddens() :
+    global pm_output, pm_hiddens, input_cnt, output_cnt, hidden_config
+
+    pm_hiddens = []
+    prev_cnt = input_cnt
+
+    for hidden_cnt in hidden_config :
+        pm_hiddens.append(alloc_param_pair([prev_cnt, hidden_cnt]))
+        prev_cnt = hidden_cnt
+
+    pm_output = alloc_param_pair([prev_cnt, output_cnt])
