@@ -61,3 +61,17 @@ def init_model_hiddens() :
         prev_cnt = hidden_cnt
 
     pm_output = alloc_param_pair([prev_cnt, output_cnt])
+
+def forward_neuralnet_hiddens(x) :
+    global pm_output, pm_hiddens
+
+    hidden = x
+    hiddens = [x]
+
+    for pm_hidden in pm_hiddens :
+        hidden = relu(np.matmul(hidden, pm_hidden['w']) + pm_hidden['b'])
+        hiddens.append(hidden)
+
+    output = np.matmul(hidden, pm_output['w']) + pm_output['b']
+
+    return output, hiddens
