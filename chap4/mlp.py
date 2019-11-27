@@ -114,4 +114,9 @@ def init_model() :
         print('은닉 계층 하나를 갖는 다층 퍼셉트론이 작동되었습니다.')
         init_model_hidden1()
 
-    
+def forward_neuralnet(x) :
+    if hidden_config is not None :
+        return forward_neuralnet_hiddens(x)
+    else : 
+        return forward_neuralnet_hidden1(x)
+
