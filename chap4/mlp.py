@@ -120,3 +120,8 @@ def forward_neuralnet(x) :
     else : 
         return forward_neuralnet_hidden1(x)
 
+def backprop_neuralnet(G_output, hiddens) :
+    if hidden_config is not None :
+        backprop_neuralnet_hiddens(G_output, hiddens)
+    else :
+        backprop_neuralnet_hidden1(G_output, hiddens)
