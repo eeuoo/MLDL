@@ -125,3 +125,12 @@ def backprop_neuralnet(G_output, hiddens) :
         backprop_neuralnet_hiddens(G_output, hiddens)
     else :
         backprop_neuralnet_hidden1(G_output, hiddens)
+
+def set_hidden(info) :
+    global hidden_cnt, hidden_config
+
+    if isinstance(info, int) :
+        hidden_cnt = info
+        hidden_config = None
+    else :
+        hidden_config = info
