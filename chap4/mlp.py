@@ -103,3 +103,15 @@ def backprop_neuralnet_hiddens(G_output, aux) :
 
         pm_hiddens[n]['w'] -= LEARNING_RATE * G_w_hid
         pm_hiddens[n]['b'] -= LEARNING_RATE * G_b_hid
+
+global hidden_config
+
+def init_model() :
+    if hidden_config is not None :
+        print('은닉 계측 {}개를 갖는 다층 퍼셉트론이 작동되었습니다.'.format(len(hidden_config)))
+        init_model_hiddens()
+    else :
+        print('은닉 계층 하나를 갖는 다층 퍼셉트론이 작동되었습니다.')
+        init_model_hidden1()
+
+    
