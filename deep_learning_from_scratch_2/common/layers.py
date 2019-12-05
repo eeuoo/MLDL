@@ -17,8 +17,8 @@ class MatMul :   # Matrix Multiply
         W, = self.params
         dx = np.matmul(dout, W.T)
         dW = np.matmul(self.x.T, dout)
-        self.grads[0][...] = dW
+        self.grads[0][...] = dW           # 생략기호를 사용하면 '깊은 복사', 메모리 위치 이동이 아닌 실제 값 덮어 쓰기
         
         return dx
 
-        
+
