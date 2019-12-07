@@ -41,13 +41,13 @@ class Sigmoid :
 
 class Affine :
     def __init__(self, W, b) :
-        self.params = [W, b]
-        self.grads = [np.zeros_like(W), np.zeros_like(b)]
+        self.params = [W, b]  # 매개변수
+        self.grads = [np.zeros_like(W), np.zeros_like(b)]  # 기울기
         self.x = None
 
     def forward(self, x) :
         W, b = self.params
-        out = np.matmul(x, W) + b
+        out = np.matmul(x, W) + b  # 편향
         self.x = x
 
         return out
