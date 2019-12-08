@@ -6,4 +6,4 @@ class SGD :
 
     def update(self, params, grads) :
         for i in range( len(params) ) :
-            params[i] -= self.lr * grads[i]
+            params[i] -= self.lr * grads[i]  # 신경망의 매개변수 갱신
