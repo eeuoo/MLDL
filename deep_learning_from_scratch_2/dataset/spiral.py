@@ -8,7 +8,7 @@ def load_data(seed=1995) :
     CLS_NUM = 3  # 클래스 수
 
     x = np.zeros((N*CLS_NUM, DIM))
-    t = np.zeros((N*CLS_NUM, DIM))
+    t = np.zeros((N*CLS_NUM, CLS_NUM), dtype=np.int)
 
     for j in range(CLS_NUM) :
         for i in range(N) :
@@ -17,7 +17,8 @@ def load_data(seed=1995) :
             theta = j * 4.0 + 4.0 * rate + np.random.randn() * 0.2
 
             ix = N * j + i
-            x[ix] = np.array( [radius * np.sin(theta), radius * np.cos(theta)] ).flatten()
+            x[ix] = np.array( [radius * np.sin(theta), 
+                               radius * np.cos(theta)] ).flatten()
             t[ix, j] = 1
 
     return x, t
