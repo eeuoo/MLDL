@@ -1,4 +1,5 @@
 import numpy as np
+from common.functions import softmax, cross_entropy_error
 
 class MatMul :   # Matrix Multiply
     def __init__(self, W):
@@ -83,13 +84,14 @@ class Softmax :
 class SoftmaxWithLoss :
     def __init__(self) :
         self.params, self.grads = [], []
-        self.y = None
-        self.t = None
+        self.y = None  # softmax의 출력
+        self.t = None  # 정답 레이블
 
     def forward(self, x, t) :
         self.t = t
-        self.y = Softmax(x)
+        self.y = softmax(x)
 
+        # 정답 레이블이 원핫 벡터일 경우 정답의 인덱스로 변환
         if self.t.size == self.y.size :
             self.t = self.t.argmax(self.y, self.t)
 
@@ -107,4 +109,3 @@ class SoftmaxWithLoss :
 
         return dx
 
-        
