@@ -38,7 +38,7 @@ class Sigmoid :
         dx = dout * (1.0 - self.out) * self.out
 
         return dx
-
+        
 
 class Affine :
     def __init__(self, W, b) :
@@ -93,7 +93,7 @@ class SoftmaxWithLoss :
 
         # 정답 레이블이 원핫 벡터일 경우 정답의 인덱스로 변환
         if self.t.size == self.y.size :
-            self.t = self.t.argmax(self.y, self.t)
+            self.t = self.t.argmax(axis=1)
 
         loss = cross_entropy_error(self.y, self.t)
 

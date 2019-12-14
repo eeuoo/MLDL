@@ -11,7 +11,7 @@ class TwoLayerNet :
         W1 = 0.01 * np.random.randn(I, H)   # 가중치 작은 무작위 값으로 초기화
         b1 = np.zeros(H)
         W2 = 0.01 * np.random.randn(H, O)   # 가중치 작은 무작위 값으로 초기화
-        b2 = np.zeros(0)
+        b2 = np.zeros(O)
 
         # 계층 생성
         self.layers = [
