@@ -153,3 +153,25 @@ def ppmi(C, verbose=False, eps = 1e-8) :
     
     return M
 
+
+def create_contexts_target(corpus, window_size = 1) :
+    '''맥락과 타깃 생성
+
+    :param corus: 말뭉치(단어 ID 목록)
+    :param window_size: 윈도우 크기(윈도우 크기가 1이면 타킷 단어 좌우 한 단어씩이 맥락에 포함)
+    :return:
+    '''
+
+    target = corpus[window_size : -window_size]
+    contexts = []
+
+    for idx in range(window_size, len(corpus) - window_size) :
+        cs = []
+        for t in range(-window_size, window_size + 1) :
+            if t == 0:
+                continue
+            cs.append(corpus[idx + t])
+        contexts.append(cs)
+
+    return np.array(contexts), np.array(target)
+
