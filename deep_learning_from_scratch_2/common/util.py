@@ -289,4 +289,13 @@ def analogy(a, b, c, word_to_id, id_to_word, word_matrix, top = 5, answer = None
             return
 
 
-def 
+def normalize(x) :
+    if x.ndim == 2 :
+        s = np.sqrt((x * x).sum(1))
+        x /= s.reshape((s.shape[0], 1))
+    
+    elif x.ndim == 1 :
+        s = np.sqrt((x * x).sum())
+        x /= x
+
+    return x
