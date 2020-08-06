@@ -81,7 +81,7 @@ class Softmax :
         
         return dx
 
-class SoftmaxWithLoss :
+class SoftMaxWithLoss :
     def __init__(self) :
         self.params, self.grads = [], []
         self.y = None  # softmax의 출력

@@ -15,7 +15,7 @@ class SimpleCBOW:
         self.in_layer0 = MatMul(W_in)
         self.in_layer1 = MatMul(W_in)
         self.out_layer = MatMul(W_out)
-        self.loss_layer = SoftmaxWithLoss()
+        self.loss_layer = SoftMaxWithLoss()
 
         # 모든 가중치와 기울기를 리스트에 모은다.
         layers = [self.in_layer0, self.in_layer1, self.out_layer]

@@ -1,5 +1,7 @@
-import os, sys
-import numpy as np
+import sys
+sys.path.append('..')
+import os
+from common.np import *
 
 def preprocess(text) :
     text = text.lower()
@@ -74,7 +76,7 @@ def most_similar(query, word_to_id, id_to_word, word_matrix, top = 5) :
             return
 
 
-def conver_one_hot(corpus, vocab_size) :
+def convert_one_hot(corpus, vocab_size) :
     '''원핫 표현으로 변환
 
     :param corpus: 단어 ID 목록(1차원 또는 2차원 넘파이 배열)
