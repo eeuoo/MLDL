@@ -3,6 +3,7 @@ sys.path.append('..')  # 부모 디렉터리의 파일을 가져올 수 있도�
 from common.trainer import Trainer
 from common.optimizer import Adam
 from simple_cbow import SimpleCBOW
+from simple_skip_gram import SimpleSkipGram
 from common.util import preprocess, create_contexts_target, convert_one_hot
 
 
@@ -19,7 +20,8 @@ contexts, target = create_contexts_target(corpus, window_size)
 target = convert_one_hot(target, vocab_size)
 contexts = convert_one_hot(contexts, vocab_size)
 
-model = SimpleCBOW(vocab_size, hidden_size)
+# model = SimpleCBOW(vocab_size, hidden_size)   # CBOW model
+model = SimpleSkipGram(vocab_size, hidden_size)  # Skip-gram model
 optimizer = Adam()
 trainer = Trainer(model, optimizer)
 
