@@ -12,8 +12,16 @@ Wh = np.random.randn(H, H)
 norm_list = []
 for t in range(T) :
     dh = np.matmul(dh, Wh.T)
-    norm = np.sqrt(np.sum(dg**2)) / N
+    norm = np.sqrt(np.sum(dh**2)) / N
     norm_list.append(norm)
 
 
-    
+
+print(norm_list)
+
+# 그래프 그리기
+plt.plot(np.arange(len(norm_list)), norm_list)
+plt.xticks([0, 4, 9, 14, 19], [1, 5, 10, 15, 20])
+plt.xlabel('시간 크기(time step)')
+plt.ylabel('노름(norm)')
+plt.show()
