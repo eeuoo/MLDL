@@ -1,9 +1,13 @@
 import numpy as np
 
+### 기울기 클리핑 
+# 기울기 폭발의 대책 
+# 문턱값을 초과하면 기울기 수정 
+
 dW1 = np.random.rand(3, 3) * 10
 dW2 = np.random.rand(3, 3) * 10
-grads = [dW1, dW2]
-max_norm = 5.0
+grads = [dW1, dW2]  # 기울기의 리스트 
+max_norm = 5.0  # 문턱값 
 
 def clip_grads(grads, max_norm):
     total_norm = 0
