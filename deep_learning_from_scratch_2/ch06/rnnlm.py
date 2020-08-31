@@ -24,4 +24,8 @@ class Rnnlm(BaseModel):
         self.loss_layer = TimeSoftWithLoss()
         self.lstm_layer = self.layers[1]
 
-       
+        # 모든 가중치와 기울기를 리스트에 모은다.
+        self.params, self.grads = [], []
+        for layer in self.layers:
+            self.params += layer.params
+            self.grads += layer.grads
