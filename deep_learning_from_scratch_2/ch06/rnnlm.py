@@ -29,3 +29,16 @@ class Rnnlm(BaseModel):
         for layer in self.layers:
             self.params += layer.params
             self.grads += layer.grads
+
+
+    def predict(self, xs) :
+        for layer in self.layers :
+            xs = layer.forward(xs)
+        return xs
+
+    def forward(self, xs, ts) :
+        score = self.predict(xs)
+        loss = self.loss_layer.forward(score, ts)
+        return loss
+
+        
