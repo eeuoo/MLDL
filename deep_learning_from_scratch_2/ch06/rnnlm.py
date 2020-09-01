@@ -41,4 +41,13 @@ class Rnnlm(BaseModel):
         loss = self.loss_layer.forward(score, ts)
         return loss
 
-        
+    def backward(self, xs, ts) :
+        dout = self.loss_layer.backward(dout)
+        for layer in reversed(self.layers):
+            dout = layer.backward(dout)
+        return dout
+
+    def reset_state(self) :
+        self.lstm_layer.reset_state()
+
+    
