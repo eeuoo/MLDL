@@ -42,3 +42,17 @@ class CBoWModel(object):
         else :
             print("load Continuous Bag of Words model")
             self.model  = self.load_model(train_fname, model_full_name)
+
+
+    def compute_word_frequency(self, embedding_corpus_fname):
+        total_count = 0
+        words_count = defaultdict(int)
+
+        with open(embedding_corpus_fname, "r") as f :
+            for line in f :
+                tokens = line.strip().split()
+                for token in tokens :
+                    words_count[token] += 1
+                    total_count += 1
+
+        return words_count, total_count
