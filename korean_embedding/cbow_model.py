@@ -90,3 +90,20 @@ class CBoWModel(object):
                     f3.writelines(word + "\u214E" + " ".join([str(el) for el in weighted_vector]) + "\n")
 
         return dictionary
+
+
+    def train_model(self, train_data_fname, model_fname):
+        model = {"vectors" : [], "labels" : [], "sentences" : []}
+        train_data = self.load_or_tokenize_corpus(train_data_fname)
+
+        with open(model_fname, "W") as f :
+            for sentence, tokens, label in train_data :
+                tokens = self.tokenizer.morphs(sentence)
+                sentence_vector = self.get_sentence_vector(tokens)
+                model["sentences"].append(sentence)
+                model["vectors"].append(sentence_vector)
+                model["labels"].append(label)
+                str_vector = " ".join([str(el) for el in sentence_vector])
+                f.writelines(sentence + "\u241E" + " ".join(tokens) + "\u241E" + str_vector + "\u241E" + label + "\n")
+
+        return model
