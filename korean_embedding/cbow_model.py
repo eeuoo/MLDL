@@ -1,4 +1,5 @@
 import os
+import numpy as np
 
 class CBoWModel(object):
     def __init__(self, train_fname, embedding_fname, model_fname, embedding_corpus_fname,
@@ -107,3 +108,39 @@ class CBoWModel(object):
                 f.writelines(sentence + "\u241E" + " ".join(tokens) + "\u241E" + str_vector + "\u241E" + label + "\n")
 
         return model
+
+
+    def get_sentence_vector(self, tokens):
+        vector = np.zeros(self.dim)
+
+        for token in tokens :
+            if token in self.embeddings.keys() :
+                vector += self.embeddings[token]
+
+        if self.average :
+            vector /= len(tokens)
+
+        vector_norm = np.linalog.norm(vector)
+
+        if vector_norm != 0:
+            unit_vector = vector / vector_norm
+        else :
+            unit_vector = np.zeros(self.dim)
+
+        return unit_vector
+
+
+    def predict_by_batch(self, tokenized_sentences, labels) :
+        sentence_vectors, eval_score = []
+
+        for tokens in tokenized_sentences :
+            sentence_vectors.append(self.get_sentence_vector(tokens))
+
+        scores = np.dot(self.model["vectors"], np.array(sentence_vectors).T)
+        preds = np.argmax(scores, axis=0)
+
+        for pred, label in zip(preds, labels) :
+            if self.model["labels"][pred] == label :
+                eval_score += 1
+
+        return preds, eval_score
