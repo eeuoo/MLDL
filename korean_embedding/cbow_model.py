@@ -18,6 +18,7 @@ class CBoWModel(object):
 
         self.tokenizer = get_tokenizer(tokenizer_name)
 
+        # Arora el al.(2016)의 가중합 방식으로 임베딩을 만들 것인지 아닌지에 따라 분기처리가 될 수 있도록 함
         if is_weighted :
             # weighted embeddings
             self.embeddings = self.load_or_construct_weighted_embedding(embedding_fname,
@@ -38,7 +39,7 @@ class CBoWModel(object):
             print("loading original embeddings, complete!")
 
         if not os.path.exsits(model_full_name) :
-            print("train Continuous Bag fo Words model")
+            print("train Continuous Bag fo Words model") # 한 번도 학습한 적 없으면 모델을 학습한다
             self.model = self.train_model(train_fname, model_full_name)
         else :
             print("load Continuous Bag of Words model")
@@ -46,6 +47,7 @@ class CBoWModel(object):
 
 
     def compute_word_frequency(self, embedding_corpus_fname):
+        # 임베딩 학습 말뭉치 내 단어별 빈도 확인 (CBoW model의 핵심 1)
         total_count = 0
         words_count = defaultdict(int)
 
@@ -61,6 +63,10 @@ class CBoWModel(object):
 
     def load_or_construct_weighted_embedding(self, embedding_fname, embedding_method,
                                              embedding_corpus_fname, a=0.0001) :
+        # 가중 임베딩 만들 (CBoW model의 핵심 2)
+        # compute_word_frequency에서 확인한 임베딩 말뭉치 통계량을 바탕으로 가중치 임베딩을 만든다
+        # 모든 단어 벡터 각각에 문장의 등장 확률을 최대화하는 주제 벡터 수식을 적용해 해단 단어 등장 확률을 반영한 가중치를 곱한다
+
         dictionary = {}
 
         if os.path.exists(embedding_fname + "-weighted") :
@@ -86,7 +92,7 @@ class CBoWModel(object):
                     else :
                         word_prob = 0.0
 
-                    weighted_vector = (a / (word_prob + a)) * np.asarray(vec)
+                    weighted_vector = (a / (word_prob + a)) * np.asarray(vec)  # a는 상수 취급, 기본값은 0.0001
                     dictionary[word] = weighted_vector
                     f3.writelines(word + "\u214E" + " ".join([str(el) for el in weighted_vector]) + "\n")
 
@@ -99,8 +105,8 @@ class CBoWModel(object):
 
         with open(model_fname, "W") as f :
             for sentence, tokens, label in train_data :
-                tokens = self.tokenizer.morphs(sentence)
-                sentence_vector = self.get_sentence_vector(tokens)
+                tokens = self.tokenizer.morphs(sentence)  # 형태소 분석
+                sentence_vector = self.get_sentence_vector(tokens)   # 문장 벡터로 가공
                 model["sentences"].append(sentence)
                 model["vectors"].append(sentence_vector)
                 model["labels"].append(label)
@@ -111,6 +117,10 @@ class CBoWModel(object):
 
 
     def get_sentence_vector(self, tokens):
+        # 문장 임베딩 만들기
+        # weighted 가 true이면 가중치 임베딩을 사용할 것이고, 아니면 어떤 처리도 하지 않 원본 벡터들이 된다
+        # 예측 단계에서 코사인 유사도를 계산하기 편하도록 크기가 1인 단위 벡터 형태로 바꿔 리턴
+
         vector = np.zeros(self.dim)
 
         for token in tokens :
@@ -128,6 +138,16 @@ class CBoWModel(object):
             unit_vector = np.zeros(self.dim)
 
         return unit_vector
+
+
+    def preict(self, sentence):
+        tokens = self.tokenizer.morphs(sentence)   # 형태소 분석
+        sentence_vector = self.get_sentence_vector(tokens)  # 문장 임베딩으로 변환
+        # 문장벡터(임베딩 차원 수)와 학습 데이터 문장 임베딩 행력(학습 데이터 문장 수 X 임베딩 차원 수)를 내적(np.dot) = 코사인 유사도
+        scores = np.dot(self.model["vectors"], sentence_vector)
+        pred = self.model["labels"][np.argmax(scores)]  # argmax로 가장 큰 유사도를 가진 문장의 인덱스 추출하여 레이블에 매칭
+
+        return pred
 
 
     def predict_by_batch(self, tokenized_sentences, labels) :
