@@ -46,4 +46,29 @@ class BetterRnnlm(BaseModel):
             self.params += layer.params
             self.grads += layer.grads
 
-    
+    def predict(self, xs, train_flg=False) :
+        for layer in self.drop_layers :
+            layer.train_flg = train_flg
+
+        for layer in self.layers :
+            xs = layer.forward(xs)
+        
+        return xs
+
+    def forward(self, xs, tx, train_flg=True) :
+        score = self.predict(xs, train_flg)
+        loss = self.loss_layer.forward(score, tx)
+
+        return loss
+
+    def backward(self, dout=1) :
+        dout = self.loss_layer.backward(dout)
+
+        for layer in reversed(self.layers) :
+            dout = layer.backward(dout)
+        
+        return dout
+
+    def reset_state(self) :
+        for layer in self.lstm_layers :
+            layer.reset_state()
