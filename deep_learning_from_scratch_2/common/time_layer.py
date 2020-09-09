@@ -102,21 +102,26 @@ class LSTM:
         Wh: 은닉 상태 h에 대한 가장추 매개변수(4개분의 가중치가 담겨 있음)
         b: 편향（4개분의 편향이 담겨 있음）
         '''
-        self.params = [Wx, Wh, b]
+        self.params = [Wx, Wh, b]   # 기울기 초기화
         self.grads = [np.zeros_like(Wx), np.zeros_like(Wh), np.zeros_like(b)]
-        self.cache = None
+        self.cache = None   # 중간 결과를 보관했다가 역전파 계산에 사용하는 용도 
 
     def forward(self, x, h_prev, c_prev):
+        # 순전파
+        # 현 시각의 입력 x, 이전 시각의 은닉 상태 h_prev, 이전 시각의 기억셀 c_prev
         Wx, Wh, b = self.params
         N, H = h_prev.shape
 
         A = np.dot(x, Wx) + np.dot(h_prev, Wh) + b
 
+        # slice  
+        # 아핀 변환의 결과 행렬을 균등하게 4조각으로 나눠서 꺼내주는 단순한 노드 
         f = A[:, :H]
         g = A[:, H:2*H]
         i = A[:, 2*H:3*H]
         o = A[:, 3*H:]
 
+        # 활성화 함수 (sigmoid 또는 tanh)
         f = sigmoid(f)
         g = np.tanh(g)
         i = sigmoid(i)
@@ -148,7 +153,7 @@ class LSTM:
         do *= o * (1 - o)
         dg *= (1 - g ** 2)
 
-        dA = np.hstack((df, dg, di, do))
+        dA = np.hstack((df, dg, di, do))    # 4개의 기울기 행렬 연결, 주어진 배열을 가로로 연결
 
         dWh = np.dot(h_prev.T, dA)
         dWx = np.dot(x.T, dA)
