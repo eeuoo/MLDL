@@ -33,3 +33,42 @@ class Vocabulary(object) :
             if self._bos == -1 or self._eos == -1 or self._unk == -1 :
                 raise ValueError("Ensure the vocabulary file has "
                                  "<S>, </S>, <UNK> tokens")
+
+    @property
+    def bos(self):
+        return self._bos
+
+    @property
+    def eos(self):
+        return self._eos
+
+    @property
+    def unk(self):
+        return self._unk
+
+    @property
+    def size(self):
+        return len(self._id_to_word)
+
+    def word_to_id(self, word):
+        if word in self._word_to_id:
+            return self._word_to_id[word]
+        return self.unk
+
+    def id_to_word(self, cur_id):
+        return self._id_to_word[cur_id]
+
+    def decode(self, cur_ids):
+        return ' '.join([self.id_to_word(cur_id) for cur_id in cur_ids])
+
+    def encode(self, sentence, reverse=False, split=True):
+        if split:
+            word_ids = [self.word_to_id(cur_word) for cur_word in sentence.split()]
+        else:
+            word_ids = [self.word_to_id(cur_word) for cur_word in sentence]
+
+        if reverse:
+            return np.array([self.eos] + word_ids + [self.bos], dtype=np.int32)
+        else:
+            return np.array([self.bos] + word_ids + [self.eos], dtype=np.int32)
+
