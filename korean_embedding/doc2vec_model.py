@@ -16,4 +16,3 @@ class Doc2VecInput :
                 except :
                     continue
 
-
