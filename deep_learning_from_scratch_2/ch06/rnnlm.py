@@ -53,9 +53,11 @@ class Rnnlm(BaseModel):
         self.lstm_layer.reset_state()
 
     def save_params(self, file_name="Rnnlm.pkl") :
+        # 매개변수 쓰기
         with open(file_name, 'wb') as f :
             pickle.dump(self.params, f)
 
     def load_params(self, file_name='Rnnlm.pkl') :
+        # 매개변수 읽기
         with open(file_name, 'rb') as f :
             self.params = pickle.load(f)
