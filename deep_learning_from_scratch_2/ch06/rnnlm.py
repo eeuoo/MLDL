@@ -32,6 +32,8 @@ class Rnnlm(BaseModel):
 
 
     def predict(self, xs) :
+        # Softmax 계층 직전까지를 처리하는 predict() 메서드 추가 
+        # 문장생서에 사용됨 
         for layer in self.layers :
             xs = layer.forward(xs)
         return xs
