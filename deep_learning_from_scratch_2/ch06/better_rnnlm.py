@@ -14,6 +14,11 @@ class BetterRnnlm(BaseModel):
      [3] Tying Word Vectors and Word Classifiers (https://arxiv.org/pdf/1611.01462.pdf)
     '''
 
+    # 개선점 3가지
+    # 1. LSTM 계층의 다층화 (여기에서는 2층)
+    # 2. 드롭아웃 사용 (깊이 방향으로만 적용)
+    # 3. 가중치 공유 (Embedding 계층과 Affine 계층에서 가중치 공유)
+
     def __init__(self, vocab_size=10000, wordvec_size=650, hidden_size=650, dropout_ratio=0.5) :
 
         V, D, H = vocab_size, wordvec_size, hidden_size
@@ -28,6 +33,7 @@ class BetterRnnlm(BaseModel):
         lstm_b2 = np.zeros(4 * H).astype('f')
         affine_b = np.zeros(V).astype('f')
 
+        # 세 가지 개선 ! 
         self.layers = [
             TimeEmbedding(embed_W),
             TimeDropout(dropout_ratio),
@@ -35,7 +41,7 @@ class BetterRnnlm(BaseModel):
             TimeDropout(dropout_ratio),
             TimeLSTM(lstm_Wx2, lstm_Wh2, lstm_b2, stateful=True),
             TimeDropout(dropout_ratio),
-            TimeAffine(embed_W.T, affine_b)  # weight tying!!
+            TimeAffine(embed_W.T, affine_b)  # weight tying (가중치 공유) !!
         ]
         self.loss_layer = TimeSoftmaxWithLoss()
         self.lstm_layers = [self.layers[2], self.layers[4]]
