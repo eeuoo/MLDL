@@ -17,11 +17,11 @@ class RnnlmGen(Rnnlm) :
         x = start_id
 
         while len(word_ids) < sample_size :
-            x = np.array(x).reshape(1, 1)
-            score = self.predict(x)
-            p = softmax(score.flatten())
+            x = np.array(x).reshape(1, 1) # 미니배치 처리를 하므로 입력 x는 2차원 배열이 되어야 함, 단어 ID를 하나만 입력하더라도 미니배치 크기는 1로 간주해 1X1 넘파이 배열로 성형함
+            score = self.predict(x)  # 각 단어의 점수를 출력(점수는 정규화 되기 전 값)
+            p = softmax(score.flatten())  # 소프트맥스로 정규화, 이걸 목표로 하는 확률분포 p를 얻을 수 있음
 
-            smapled =  np.random.choice(len(p), size=1, p=p)
+            smapled =  np.random.choice(len(p), size=1, p=p) # 확률분포 p로부터 다음 단어를 샘플링, 네거티브 샘플링에서 사용됨 
 
             if (skip_ids is None) or (sampled not in skip_ids) :
                 x = sampled 
