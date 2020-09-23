@@ -11,8 +11,8 @@ model = RnnlmGen()
 #model.load_params('../ch06/Rnnlm.pkl') # 앞 장에서 학습을 끝낸 가중치 매개변수
 
 # 시작(start) 문자와 건너뜀(skip) 문자 설정
-start_word = 'you'
-start_id = word_to_id[start_word]
+start_word = 'you' # 첫 문자로 'you'를 사용
+start_id = word_to_id[start_word] # 'you'의 ID
 skip_words = ['N', '<unk>', '$'] # 샘플링하지 않을 단어 지정 
 skip_ids = [word_to_id[w] for w in skip_words] 
 
