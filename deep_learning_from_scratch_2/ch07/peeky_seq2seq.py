@@ -4,6 +4,10 @@ sys.path.append('..')
 from common.time_layers import *
 from seq2seq import Seq2seq, Encoder
 
+# seq2seq 의 두 번째 개선
+# peeky = 엿보기
+
+
 class PeekyDecoder :
     def __init__(self, vocab_size, wordvec_size, hidden_size) :
         V, D, H = vocab_size, wordvec_size, hidden_size
