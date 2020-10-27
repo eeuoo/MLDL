@@ -51,6 +51,9 @@ class Encoder:
 
 
 class Decoder :
+    # Encoder 가 출력한 h를 받아 목적으로 하는 다른 문자열을 출력.
+    # RNN 계층으로 구성됨.
+    # RNN 계층으로 문장을 생성할 때 추론 시 최초 시작을 알리는 구분 문자(ex, '_') 하나만 준다.
     def __init__(self, vocab_size, wordvec_size, hidden_size) :
         V, D, H = vocab_size, wordvec_size, hidden_size
         rn = np.random.randn
