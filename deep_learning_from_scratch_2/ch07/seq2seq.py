@@ -68,17 +68,22 @@ class Decoder :
         affine_W = (rn(H,V) / np.sqrt(H)).astype('f')
         affing_b = np.zeros(V).astype('f')
 
+        # Time Embedding, Time LSTM, TimeAffine 의 3가지 계층으로 구성됨.
+        # Encdoer의 출력 h를 Decoder의 Time LSTM 계층의 상태로 설정함. 즉, 상태를 갖도록(stateful) 한 것.
+        # 단, 한번 설정된 이 은닉 상태는 재설정되지 않고, Endocer의 h를 유지하면서 순전파가 이뤄짐.
         self.embed = TimeEmbedding(embed_W)
         self.lstm = TimeLSTM(lstm_Wx, lstm_Wh, lstm_b, stateful=True)
         self.affine = TimeAffine(affine_W, affine_b)
 
         self.params, self.grads = [], []
 
-        for layer in (self.embed, self.lstm, self.affime) :
+        for layer in (self.embed, self.lstm, self.affine) :
             self.params += layer.params
             self.grads += layer.grads
 
+
         def forward(self, xs, h) :
+            # forward : 학습할 때 사용되는 메서드.
             self.lstm.set_state(h)
 
             out = self.embed.forward(xs)
@@ -88,14 +93,20 @@ class Decoder :
             return score
 
         def backward(self, dscore) :
+            # 위쪽의 Softmax with Loss 계층으로부터 기울기 dscore를 받아 아래 3계층으로 전파.
             dout = self.affine.backward(dscore)
             dout = self.lstm.backward(dout)
             dout = self.embed.backward(dout)
-            dh = self.lstm.dh
+            dh = self.lstm.dh  # LSTM 의 시간 방향으로의 기울기는 인스턴스 변수 dh에 저장되어 있음.
 
             return dh
 
         def generate(self, h, start_id, sample_size) :
+            # generate : Decoder 클래스에 문장 생성을 담당하는 generate() 메서드.
+            # h : Encoder로부터 받은 은닉 상태.
+            # start_id : 최초로 주어지는 문자 ID.
+            # sample_size : 생성하는 문자 수.
+            # 문자를 주고 Affine 계층이 출력하는 점수가 가장 큰 문자 ID를 선택하는 작업을 반복한다.
             sampled = []
             sample_id = start_id
             self.lstm.set_state(h)
@@ -106,7 +117,7 @@ class Decoder :
                 out = self.lstm.forward(out)
                 score = self.affine.forward(out)
 
-                sample_id = np.argmax(score.flatten())
+                sample_id = np.argmax(score.flatten())  # argmax : 최댓값을 가진 원소의 인덱스(문자 ID)를 선택하는 노드
                 sampled.append(int(sample_id))
 
             return sampled
