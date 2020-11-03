@@ -38,9 +38,11 @@ for epoch in range(max_epoch) :
     for i in range(len(x_test)) :
         question, correct = x_test[[i]], t_test[[i]]
         verbose = i < 10
+        # eval_seq2seq : 문제(question)를 모델에 주고, 문자열을 생성하게 하여 그것이 답과 같은지를 판정한다, 모델이 맞으면 1, 아니면 0 리턴.
+        # 인자를 6개정도 받음. model, question(문제 문장 ID의 배열), correct(정답 문장 ID의 배열),
+        # id_to_char(문자 ID와 문자의 변환을 수행하는 딕셔너리), verbose(결과를 출력할지 여부), is_reverse(입력문을 반전했는지 여부)
         correct_num += eval_seq2seq(model, question, correct,
                                     id_to_char, verbose)
-
     acc = float(correct_num) / len(x_test)
     acc_list.append(acc)
 
