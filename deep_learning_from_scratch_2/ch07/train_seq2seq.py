@@ -12,6 +12,7 @@ from peeky_seq2seq import PeekySeq2seq
 
 # 데이터셋 읽기
 (x_train, t_train), (x_test, t_test) = sequence.load_data('addition.txt')
+x_train, x_test = x_train[:, ::-1], x_test[:, ::-1]  # 배열의 행을 반전하면 학습 속도가 훨씬 빨라져 최종 정확도도 높아진다. (기울기 전파가 원활해져서)
 char_to_id, id_to_char = sequence.get_vecab()
 
 # 하이퍼파라미터 설정
