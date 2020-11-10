@@ -6,8 +6,9 @@ from seq2seq import Seq2seq, Encoder
 
 # seq2seq 의 두 번째 개선
 # peeky = 엿보기
-
-
+# 중요한 정보가 담긴 Encoder의 출력 h를 Decoder의 다른 계층에게도 전해주는 것.
+# 모든 시각의 Affine 계층과 LSTM 계층에 h를 전해주며 기존에는 하나의 LSTM만이 소유하던 중요 정보 h를 여러 계층에서 공유함.
+# 집단지성과 같음. 중요 정보를 한 사람이 독점하는 게 아니라 많은 사람과 공유하면 올바른 결정 내릴 가능성 높아질 것.
 class PeekyDecoder :
     def __init__(self, vocab_size, wordvec_size, hidden_size) :
         V, D, H = vocab_size, wordvec_size, hidden_size
@@ -36,13 +37,13 @@ class PeekyDecoder :
         self.lstm.set_state(h)
 
         out = self.embed.forward(xs)
-        hs = np.repeat(h, T, axis=0).reshape(N, T, H)
+        hs = np.repeat(h, T, axis=0).reshape(N, T, H)   # h를 시계열만큼 복제해서 hs에 저장.
+        out = np.concatenate((hs, out), axis=2)  # hs와 Embedding 계층의 출력을 연결.
+
+        out = self.lstm.forward(out)  # 연결한 것을 LSTM 계층에 입력.
         out = np.concatenate((hs, out), axis=2)
 
-        out = self.lstm.forward(out)
-        out = np.concatenate((hs, out), axis=2)
-
-        score = self.affine.forward(out)
+        score = self.affine.forward(out)   # 연결한 것을 Affine 계층에 입력.
         self.cache = H
 
         return score
