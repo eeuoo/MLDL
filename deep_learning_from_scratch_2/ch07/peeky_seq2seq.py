@@ -85,3 +85,14 @@ class PeekyDecoder :
             sampled.append(char_id)
 
         return sampled
+
+
+class PeekySeq2seq(Seq2seq) :  # Seq2seq 계승
+    def __init__(self, vocab_size, wordvec_size, hidden_size) :
+        V, D, H = vocab_size, wordvec_size, hidden_size
+        self.encoder = Encoder(v, D, H)
+        self.encoder = PeekyDecoder(V, D, H)  # seq2seq 과 다르게 PeekyDecoder를 사용.
+        self.softmax = TimeSoftmaxWithLoss()
+
+        self.params = self.encoder.params + self.decoder.params
+        self.grads = self.encoder.grads + self.encoder.grads
