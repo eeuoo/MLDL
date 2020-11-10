@@ -96,3 +96,9 @@ class PeekySeq2seq(Seq2seq) :  # Seq2seq 계승
 
         self.params = self.encoder.params + self.decoder.params
         self.grads = self.encoder.grads + self.encoder.grads
+
+
+# Encoder의 정보를 널리 퍼지게 하는 Peeky
+# Peeky 를 이용하게 되면 신경망은 가중치 매개변수가 커져서 계산량도 늘어난다.
+# 커진 매개변수만큼의 핸디캡을 잘 감안해야 할 것.
+# 또한 seq2seq의 정확도는 하이퍼파라미터 영향을 크게 받는다.
