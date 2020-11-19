@@ -60,11 +60,13 @@ class AttentionWeight :
 
         return dhs, dh
 
+# attention weight + weight sum = Attention
+# Encoder 가 건네주는 정보 hs에서 중요한 원소에 주목하여, 그것을 바탕으로 맥락 벡터를 구해 위쪽 계측으로 전파
 class Attention :
     def __init__(self) :
         self.params, self.grads = [], []
-        self.attention_weight_layer = AttentionWeight()
-        self.weight_sum_layer = WeightSum()
+        self.attention_weight_layer = AttentionWeight()  # Encoder 가 출력하는 각 단어 벡터 hs에 주목하여 해당 단어의 가중치 a를 구함
+        self.weight_sum_layer = WeightSum() # a와 hs의 가중합을 구하고 결과를 맥락 벡터 c로 출력
         self.attention_weight = None
 
     def forward(self, hs, h) :
