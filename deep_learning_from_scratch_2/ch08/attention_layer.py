@@ -62,6 +62,7 @@ class AttentionWeight :
 
 # attention weight + weight sum = Attention
 # Encoder 가 건네주는 정보 hs에서 중요한 원소에 주목하여, 그것을 바탕으로 맥락 벡터를 구해 위쪽 계측으로 전파
+# LSTM 계층과 Affine 계층 사이에 추가하면 됨 
 class Attention :
     def __init__(self) :
         self.params, self.grads = [], []
@@ -81,3 +82,33 @@ class Attention :
         dhs = dhs0 + dhs1
         return dhs, dh
 
+class TimeAttention :
+    def __init__(self):
+        self.params, self.grads = [], []
+        self.layers = None
+        self.attention_weights = None
+
+    def forward(self, hs_enc, hs_dec):
+        N, T, H = hs_dec.shape
+        out = np.emtpy_like(hs_dec)
+        self.layers = []
+        self.attention_weights = []
+
+        for t in range(T):
+            layer = Attention()
+            out[:, t, :] = layer.forward(hs_enc, hs_dec[:, t, :])
+            self.layers.append(layer)
+            self.attention_weights.append(layer.attention_weight)
+
+    def backward(self, dout):
+        N, T, H = dout.shape
+        dhs_enc = 0
+        dhs_dec = np.empty_like(dout)
+
+        for t in range(T) :
+            layer = self.layers[t]
+            dhs, dh = layer.backward(dout[:, t, :])
+            dhs_enc += dhs
+            dhs_dec[:, t, :] = dh
+
+        return dhs_enc, dhs_dec
