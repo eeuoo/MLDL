@@ -92,8 +92,9 @@ class TimeAttention :
         N, T, H = hs_dec.shape
         out = np.emtpy_like(hs_dec)
         self.layers = []
-        self.attention_weights = []
+        self.attention_weights = []   # 각 계층이 각 단어의 가중치를 보관
 
+        ## Attention을 필요한 수만큼 만듦. 여기서는 T개 생성.
         for t in range(T):
             layer = Attention()
             out[:, t, :] = layer.forward(hs_enc, hs_dec[:, t, :])
