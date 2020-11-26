@@ -91,8 +91,8 @@ class AttentionDecoder :
 class AttentionSeq2seq(Seq2seq) :
     def __init__(self, vocab_size, wordvec_size, hidden_size) :
         args = vocab_size, wordvec_size, hidden_size
-        self.encoder = AttentionEncoder(*args)
-        self.decoder = AttentionDecoder(*args)
+        self.encoder = AttentionEncoder(*args)  # Encoder 대신 AttentionEncoder 사용
+        self.decoder = AttentionDecoder(*args)  # Decoder 대신 AttentionDecoder 사용
         self.softmax = TimeSoftmaxWithLoss()
 
         self.params = self.encoder.params + self.decoder.params
